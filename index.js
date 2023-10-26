@@ -65,32 +65,15 @@ io.on("connection", (socket) => {
   socket.on("typing", (room) => socket.in(room).emit("typing"));
   socket.on("stop-typing", (room) => socket.in(room).emit("stop-typing"));
 
-  socket.on("new-message", async (newMessageReceived) => {
+  socket.on("new-message", (newMessageReceived) => {
     let chat = newMessageReceived.chat;
-  
-    if (!chat.users) return console.log("chat.users not defined");
-  
-    chat.users.forEach(async (user) => {
+
+    if (!chat.users) return console.log(`chat.users not defined`);
+
+    chat.users.forEach((user) => {
       if (user._id === newMessageReceived.sender._id) return;
-  
-      try {
-        // Specify the GPT-3 model (e.g., "text-davinci-002") in the request
-        const correctedMessage = await openai.completions.create({
-          model: "text-davinci-002", // Specify the model here
-          prompt: `Correct the grammar of the following message: "${newMessageReceived.message}"`,
-          max_tokens: 50,
-        });
-  
-        const correctedText = correctedMessage.choices[0].text;
-  
-        // Send the corrected message back to the sender for confirmation
-        socket.in(newMessageReceived.sender._id).emit("message-corrected", {
-          originalMessage: newMessageReceived.message,
-          correctedMessage: correctedText,
-        });
-      } catch (error) {
-        console.error("Error correcting grammar:", error);
-      }
+console.log("Hey got a message " + newMessageReceived)
+      socket.in(user._id).emit("message-received", newMessageReceived);
     });
   });
 
