@@ -10,12 +10,10 @@ import authRoute from "./routes/auth.js";
 import chatRoute from "./routes/chat.js";
 import messageRoute from "./routes/message.js";
 import authenticateUser from "./middleware/auth.js";
-import OpenAIApi from "openai";
+
 
 // Initialize the OpenAI API with your API key
-const openai = new OpenAIApi({
-  apiKey: "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",
-});
+
 const dbConnectionString =
   "mongodb+srv://madhu:madhu@clusterbackend.szevd.mongodb.net/chatdb?retryWrites=true&w=majority";
 dotenv.config();
@@ -46,7 +44,7 @@ app.use("/message", authenticateUser, messageRoute);
 const io = new Server(server, {
   pingTimeout: 60000,
   cors: {
-    origin: "http://localhost:3000",
+    origin: "https://verbexchange.netlify.app",
   },
 });
 
